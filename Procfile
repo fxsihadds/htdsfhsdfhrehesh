@@ -1,1 +1,1 @@
-worker : chmod +x start.sh && bash start.sh
+worker: python my_bot.py
