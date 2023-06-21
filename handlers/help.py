@@ -9,8 +9,11 @@ def register(app):
             text='Available commands:\n'
                  '/start - Start the bot\n'
                  '/help - Get help and command list\n'
-                 '/Gscraper - Perform scraping operation\n'
+                 '/userinfo - UserInfo\n'
+                 '/Gscraper - Combo Scrape\n'
                  '/screenshot - To take Screenshot Using Url\n'
                  '/sms - Send Custom Sms Your Favorite One\n'
-                 '/hoichoi - Send Custom Sms Your Favorite One\n'
+                 '/hoichoi - Check Your Valid Hoichoi Combo\n'
+                 '/crunchyroll - Check Your Valid Crunchyroll Combo\n'
+                 
         )
