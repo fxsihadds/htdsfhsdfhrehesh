@@ -104,18 +104,18 @@ async def crunchyroll_helper_command(app: Client, message: Message):
             await progress_message.delete()
 
             if success_accounts:
-                save_results("success_accounts.txt", success_accounts)
+                with open("success_accounts.txt", "w") as file:
+                    file.write("\n".join(success_accounts))
                 await app.send_document(message.chat.id, document="success_accounts.txt")
                 os.remove("success_accounts.txt")
 
             os.remove(document)
 
         else:
-            await message.reply_text("No valid email:password.")
+            await message.reply_text("No valid email:password combos found.")
 
     else:
-        await message.reply_text(
-            "Please reply with a valid combo.txt file.")
+        await message.reply_text("Please reply with a valid combo.txt file.")
 
 
 def save_results(filename, combos):

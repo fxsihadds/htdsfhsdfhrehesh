@@ -22,7 +22,7 @@ def extract_emails(text):
 
 
 async def hoichoi_helper_command(app: Client, message: Message):
-    status = await message.reply_text('<i>Checking...</i>')
+    status = await message.reply_text('<i>Hoichoi Checking...</i>')
     try:
         # Check if the message contains an attached document
         if message.reply_to_message and message.reply_to_message.document:
