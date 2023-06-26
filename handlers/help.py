@@ -15,5 +15,6 @@ def register(app):
                  '/sms - Send Custom Sms Your Favorite One\n'
                  '/hoichoi - Check Your Valid Hoichoi Combo\n'
                  '/crunchyroll - Check Your Valid Crunchyroll Combo\n'
+                 '/chaupal - Check Your Valid chaupal Combo\n'
                  
         )
