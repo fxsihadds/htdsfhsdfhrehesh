@@ -16,5 +16,7 @@ def register(app):
                  '/hoichoi - Check Your Valid Hoichoi Combo\n'
                  '/crunchyroll - Check Your Valid Crunchyroll Combo\n'
                  '/chaupal - Check Your Valid chaupal Combo\n'
+                 '/ip - Check Your IP address\n'
+                 '/rand - Fake Random Details\n'
                  
         )
