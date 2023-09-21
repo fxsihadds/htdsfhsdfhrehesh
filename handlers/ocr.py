@@ -16,12 +16,6 @@ import shutil
 from tqdm import tqdm
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-# Initialize your Pyrogram bot (replace with your API ID, API HASH, and bot token)
-api_id = "2069099"
-api_hash = "c9083372a4110877c8a42a27c9ee1c9e"
-bot_token = "6261764188:AAGyO88OpD38AjDpaZFO2OEOHaP_d4kSA-I"
-
-app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 # Define the directory paths
 download_dir_name = "download"  # Use your 'download' folder's name
@@ -90,7 +84,7 @@ def register(app):
     async def ocr_command(client, message):
         if message.reply_to_message and message.reply_to_message.document:
             if message.reply_to_message.document.file_name.lower() == "images.zip":
-                await message.reply_text("Processing images...")
+                await message.reply_text("")
 
                 # Download the 'images.zip' file from Telegram to the 'download' directory
                 download_dir = download_dir_name  # Update this to your download directory
