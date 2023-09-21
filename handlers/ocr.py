@@ -84,7 +84,7 @@ def register(app):
     async def ocr_command(client, message):
         if message.reply_to_message and message.reply_to_message.document:
             if message.reply_to_message.document.file_name.lower() == "images.zip":
-                await message.reply_text("")
+                await message.reply_text("Starting ... ")
 
                 # Download the 'images.zip' file from Telegram to the 'download' directory
                 download_dir = download_dir_name  # Update this to your download directory
