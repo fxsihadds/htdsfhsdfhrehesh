@@ -18,5 +18,6 @@ def register(app):
                  '/chaupal - Check Your Valid chaupal Combo\n'
                  '/ip - Check Your IP address\n'
                  '/rand - Fake Random Details\n'
+                 '/ocr - Images OCR\n'
                  
         )
