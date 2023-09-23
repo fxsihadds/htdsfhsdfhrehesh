@@ -16,6 +16,12 @@ import shutil
 from tqdm import tqdm
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+# Initialize your Pyrogram bot (replace with your API ID, API HASH, and bot token)
+api_id = "2069099"
+api_hash = "c9083372a4110877c8a42a27c9ee1c9e"
+bot_token = "6261764188:AAGyO88OpD38AjDpaZFO2OEOHaP_d4kSA-I"
+
+app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=bot_token)
 
 # Define the directory paths
 download_dir_name = "download"  # Use your 'download' folder's name
@@ -40,7 +46,7 @@ if not os.path.exists(raw_texts_dir):
 SCOPES = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE = 'credentials.json'
 APPLICATION_NAME = 'Drive API Python Quickstart'
-THREADS = 250
+THREADS = 25
 
 total_images = 0
 completed_scans = 0
@@ -84,7 +90,7 @@ def register(app):
     async def ocr_command(client, message):
         if message.reply_to_message and message.reply_to_message.document:
             if message.reply_to_message.document.file_name.lower() == "images.zip":
-                await message.reply_text("Starting ... ")
+                stutas = await message.reply_text("Processing images...")
 
                 # Download the 'images.zip' file from Telegram to the 'download' directory
                 download_dir = download_dir_name  # Update this to your download directory
@@ -106,9 +112,6 @@ def register(app):
 
                 total_images = len(images)
                 completed_scans = 0
-
-                # Implement your OCR and text extraction logic here
-                # You can use the existing logic you provided in your original script
 
                 # Initialize the progress bar message
                 progress_percentage = 0
@@ -153,7 +156,7 @@ def register(app):
                     await client.send_document(
                         chat_id=message.chat.id,
                         document=zip_file,
-                        caption="Processed text files"
+                        caption="Processed text"
                     )
 
                 # Clean up: Delete unnecessary files and directories
@@ -194,11 +197,13 @@ def register(app):
                 await progress_message.edit_text(completion_message)
 
                 # Remove the "Processing images..." message after a brief delay
-                await asyncio.sleep(3)  # Wait for 3 seconds (you can adjust the delay as needed)
+                await asyncio.sleep(1)
+                # Wait for 3 seconds (you can adjust the delay as needed)
                 await progress_message.delete()
+                await stutas.delete()
 
         else:
-            await message.reply_text("Please reply to a message containing an 'images.zip' document to perform OCR.")
+            await message.reply_text("Please reply to a message containing an images.zip")
 
 
 def zip_output(zip_file_name, source_dir):
