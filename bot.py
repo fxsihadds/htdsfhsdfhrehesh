@@ -2,7 +2,6 @@ import configparser
 import os
 from pyrogram import Client
 
-
 # Load configuration
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -17,13 +16,22 @@ app = Client(
 
 # Load command handlers from the 'handlers' folder
 handlers_dir = 'handlers'
+users_dir = 'users'
+
+# Iterate through the 'handlers' folder
 for filename in os.listdir(handlers_dir):
     if filename.endswith('.py'):
         module_name = filename[:-3]
         module = __import__(f'{handlers_dir}.{module_name}', fromlist=[module_name])
         module.register(app)
 
+# Iterate through the 'users' folder
+for filename in os.listdir(users_dir):
+    if filename.endswith('.py'):
+        module_name = filename[:-3]
+        module = __import__(f'{users_dir}.{module_name}', fromlist=[module_name])
+        module.register(app)
+
 # Run the bot
 print("BOT Alive")
 app.run()
-
