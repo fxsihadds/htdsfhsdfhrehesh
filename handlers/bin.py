@@ -5,7 +5,7 @@ from pyrogram import Client, filters
 def register(app):
     @app.on_message(filters.command("bin"))
     async def cmds(client, message):
-        with open(file="handlers/users/premium.txt", mode="r+", encoding='utf-8') as premium:
+        with open(file="users/premium.txt", mode="r+", encoding='utf-8') as premium:
             premium_users = premium.readlines()
 
         if str(message.from_user.id) + '\n' in premium_users:
