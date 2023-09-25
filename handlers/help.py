@@ -8,7 +8,7 @@ def register(app):
             chat_id=message.chat.id,
             text = 'Available commands:\n' \
                    '<code>/start</code> - <b>Start the bot</b>\n' \
-                   '<code>/userinfo</code> - <b>UserInfo</b>\n' \
+                   '<code>/bin</code> - <b>Check Your Bin</b>\n' \
                    '<code>/Gscraper</code> - <b>Combo Scrape</b>\n' \
                    '<code>/paste</code> - <b>Paste Any text</b>\n' \
                    '<code>/unzip</code> - <b>Unzip Your File</b>\n' \
