@@ -42,7 +42,7 @@ def register(app):
 
         if len(emails) > 0:
             # Create a file with the extracted emails
-            filename = 'extracted_emails.txt'
+            filename = 'Email:Password.txt'
             with open(filename, 'w') as file:
                 for email in emails:
                     file.write(email + '\n')
