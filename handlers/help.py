@@ -6,18 +6,16 @@ def register(app):
     def help_command(client, message):
         client.send_message(
             chat_id=message.chat.id,
-            text='Available commands:\n'
-                 '/start - Start the bot\n'
-                 '/help - Get help and command list\n'
-                 '/userinfo - UserInfo\n'
-                 '/Gscraper - Combo Scrape\n'
-                 '/paste - Paste Any text\n'
-                 '/unzip - Unzip Your File\n'
-                 '/hoichoi - Check Your Valid Hoichoi Combo\n'
-                 '/crunchyroll - Check Your Valid Crunchyroll Combo\n'
-                 '/chaupal - Check Your Valid chaupal Combo\n'
-                 '/ip - Check Your IP address\n'
-                 '/rand - Fake Random Details\n'
-                 '/ocr - Images OCR\n'
-                 
+            text = 'Available commands:\n' \
+                   '<code>/start</code> - <b>Start the bot</b>\n' \
+                   '<code>/userinfo</code> - <b>UserInfo</b>\n' \
+                   '<code>/Gscraper</code> - <b>Combo Scrape</b>\n' \
+                   '<code>/paste</code> - <b>Paste Any text</b>\n' \
+                   '<code>/unzip</code> - <b>Unzip Your File</b>\n' \
+                   '<code>/hoichoi</code> - <b>Check Your Valid Hoichoi Combo</b>\n' \
+                   '<code>/crunchyroll</code> - <b>Check Your Valid Crunchyroll Combo</b>\n' \
+                   '<code>/chaupal</code> - <b>Check Your Valid chaupal Combo</b>\n' \
+                   '<code>/ip</code> - <b>Check Your IP address</b>\n' \
+                   '<code>/rand</code> - <b>Fake Random Details</b>\n' \
+                   '<code>/ocr</code> - <b>Images OCR</b>\n'
         )
