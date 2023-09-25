@@ -12,6 +12,7 @@ def extract_emails(text):
 def register(app):
     @app.on_message(filters.command('gscraper'))
     async def scraper_command(client, message):
+        status = await message.reply("<i>Extracting...<i>")
         if message.reply_to_message is not None and message.reply_to_message.document:
             # Scraping from a replied document
             document = message.reply_to_message.document
@@ -26,10 +27,7 @@ def register(app):
                 # Remove the temporary file
                 os.remove(file_path)
             else:
-                await client.send_message(
-                    chat_id=message.chat.id,
-                    text='Please provide a text file (.txt) to scrape Gmail.'
-                )
+                await status.edit_text(text='<b>Please provide a text file (.txt) to scrape Gmail:Password😞.</b>')
                 return
         else:
             # Scraping from the command message
@@ -37,10 +35,7 @@ def register(app):
             if len(command_text) > 1:
                 text_to_scrape = command_text[1]
             else:
-                await client.send_message(
-                    chat_id=message.chat.id,
-                    text='Please provide a text file (.txt) or text to scrape Gmail.'
-                )
+                await status.edit_text(text='<b>Please provide a text file (.txt) to scrape Gmail:Password😞.</b>')
                 return
 
         emails = extract_emails(text_to_scrape)
@@ -56,14 +51,11 @@ def register(app):
             await client.send_document(
                 chat_id=message.chat.id,
                 document=filename,
-                caption=f'Extracted {len(emails)} email(s).'
+                caption=f'<code>Extracted {len(emails)} email(s).</code>'
             )
 
             # Remove the file after sending
             os.remove(filename)
 
         else:
-            await client.send_message(
-                chat_id=message.chat.id,
-                text='No email addresses found in the provided text.'
-            )
+            await status.edit_text(text='<b>No email addresses found in the provided text ❌.</b>')
