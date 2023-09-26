@@ -5,7 +5,7 @@ from pyrogram import Client, filters
 def register(app):
     @app.on_message(filters.command("rand"))
     async def rand_helper_command(_, message):
-        status = await message.reply_text("<b>⎚ `generating...`</b>")
+        status = await message.reply_text("<b>⎚ `Generating...`</b>")
         api = requests.get(
             "https://randomuser.me/api/?nat=us&inc=name,location").json()
 
