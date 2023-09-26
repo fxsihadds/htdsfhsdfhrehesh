@@ -47,4 +47,4 @@ def register(app):
                 await message.reply_text(message_text)
 
         else:
-            await message.reply(f'<b>⎚ Register with <code>/register</code></b>')
+            await message.reply('<b>Only For Premium Members</b>')
