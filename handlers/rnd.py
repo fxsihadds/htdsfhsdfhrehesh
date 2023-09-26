@@ -31,6 +31,5 @@ def register(app):
 ⎚ 𝐏𝐨𝐬𝐭𝐜𝐨𝐝𝐞: <code> {postcode}</code>
 ⎚ 𝐂𝐨𝐮𝐧𝐭𝐫𝐲: <code>{country}</code>
 ⎚ 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐁𝐲 <code> @{message.from_user.username}</code>
-    ━━━━━━━━━━━━━━
-⎚ Create <b>Unknown</b>""")
+""")
         await status.delete()
