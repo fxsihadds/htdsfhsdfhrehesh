@@ -21,7 +21,7 @@ def register(app):
         latitude = api["results"][0]["location"]["coordinates"]["latitude"]
         longitude = api["results"][0]["location"]["coordinates"]["longitude"]
 
-        await message.reply(f"""
+        await status.edit(f"""
 <b> 
 ⎚ 𝐅𝐚𝐤𝐞 𝐀𝐝𝐝𝐫𝐞𝐬𝐬
 ⎚ 𝐍𝐚𝐦𝐞: <code>{mr} {nombre} {last}</code>
@@ -32,4 +32,3 @@ def register(app):
 ⎚ 𝐂𝐨𝐮𝐧𝐭𝐫𝐲: <code>{country}</code>
 ⎚ 𝐂𝐡𝐞𝐜𝐤𝐞𝐝 𝐁𝐲 <code> @{message.from_user.username}</code>
 """)
-        await status.delete()
