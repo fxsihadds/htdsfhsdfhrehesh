@@ -42,7 +42,7 @@ def register(app):
 
         if len(emails) > 0:
             # Create a file with the extracted emails
-            filename = 'Email:Password.txt'
+            filename = 'Gmail:Password.txt'
             with open(filename, 'w') as file:
                 for email in emails:
                     file.write(email + '\n')
@@ -51,11 +51,12 @@ def register(app):
             await client.send_document(
                 chat_id=message.chat.id,
                 document=filename,
-                caption=f'<code>Extracted {len(emails)} email(s).</code>'
+                caption=f'<b>Extracted {len(emails)}</b>'
             )
 
             # Remove the file after sending
             os.remove(filename)
+            await status.delete()
 
         else:
             await status.edit_text(text='<b>No email addresses found in the provided text ❌.</b>')
