@@ -17,7 +17,7 @@ def register(app):
         elif message.reply_to_message:
             text_to_write = message.reply_to_message.text
         else:
-            await message.reply("<b>⎚ Please use <code>/paste text to Create txt File</code></b>")
+            await message.reply("<b>⎚ Please use <code>/txt text to Create txt File</code></b>")
             return
 
         status = await message.reply_text("<b>⎚ `Creating TxT file...`</b>")
