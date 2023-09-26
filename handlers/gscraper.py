@@ -12,7 +12,7 @@ def extract_emails(text):
 def register(app):
     @app.on_message(filters.command('gscraper'))
     async def scraper_command(client, message):
-        status = await message.reply("<i>Extracting...<i>")
+        status = await message.reply("<b>⎚ `Extracting...`</b>")
         if message.reply_to_message is not None and message.reply_to_message.document:
             # Scraping from a replied document
             document = message.reply_to_message.document
