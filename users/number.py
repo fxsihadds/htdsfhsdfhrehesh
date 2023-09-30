@@ -17,7 +17,7 @@ def register(app):
             except Exception as e:
                 return await message.reply(f"<b>⎚ Error: {str(e)}</b>")
 
-            if len(number) == 11 and number.startswith("019"):
+            if len(number) == 11 and number.startswith("019", "014"):
                 status = await message.reply("<b>⎚ `Request Sending...`</b>")
                 for _ in range(amount):
                     pera = {
