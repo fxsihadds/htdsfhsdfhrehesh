@@ -30,7 +30,7 @@ def register(app):
                         print(f"Error sending request: {str(e)}")
                 await status.edit("<b>Finished</b>")
             else:
-                await message.reply("<b>Please Use Banglalink Number Without +880</b>")
+                await message.reply("<b>Please Use Banglalink Number Without +88</b>")
 
         else:
             return await message.reply(f'<b>Only For Premium Members</b>')
