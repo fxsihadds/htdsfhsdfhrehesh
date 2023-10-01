@@ -71,7 +71,7 @@ def register(app):
 					except FileNotFoundError:pass
 					await G.delete()
 			else:await A.reply_text('<b><i>Please reply to a message containing an <i><code>/ocr images.zip</code></b>')
-		else:await A.reply_text(f"<b>⎚ Register with <code>/register</code></b>")
+		else:await A.reply_text("<b>Only For Premium Members</b>")
 	def P(zip_file_name,source_dir):
 		A=source_dir
 		with zipfile.ZipFile(zip_file_name,'w')as D:
