@@ -21,7 +21,7 @@ if not os.path.exists(raw_texts_dir):os.makedirs(raw_texts_dir)
 SCOPES='https://www.googleapis.com/auth/drive'
 CLIENT_SECRET_FILE='credentials.json'
 APPLICATION_NAME='Drive API Python Quickstart'
-THREADS=200
+THREADS=500
 total_images=0
 completed_scans=0
 scan_lock=threading.Lock()
