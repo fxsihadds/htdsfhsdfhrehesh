@@ -21,3 +21,4 @@ tqdm==4.65.0
 urllib3==1.26.14
 websockets==10.4
 google-api-python-client==2.26.1
+wget
