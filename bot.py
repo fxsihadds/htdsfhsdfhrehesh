@@ -3,7 +3,7 @@ import configparser,os
 from pyrogram import Client
 config=configparser.ConfigParser()
 config.read('config.ini')
-app=Client('my_bot',api_id=config[_A]['api_id'],api_hash=config[_A]['api_hash'],bot_token=config[_A]['bot_token'], workers=100)
+app=Client('my_bot',api_id=config[_A]['api_id'],api_hash=config[_A]['api_hash'],bot_token=config[_A]['bot_token'], workers=20)
 handlers_dir='handlers'
 users_dir='users'
 for filename in os.listdir(handlers_dir):
