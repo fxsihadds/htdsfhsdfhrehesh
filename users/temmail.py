@@ -1,92 +1,83 @@
-from pyrogram import Client, filters
-import requests as re
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-import wget
 import os
-
-buttons = InlineKeyboardMarkup([
-    [
-        InlineKeyboardButton('Generate', callback_data='generate'),
-        InlineKeyboardButton('Refresh', callback_data='refresh'),
-        InlineKeyboardButton('Close', callback_data='close')
-    ]
-])
-
-msg_buttons = InlineKeyboardMarkup([
-    [
-        InlineKeyboardButton('View message', callback_data='view_msg'),
-        InlineKeyboardButton('Close', callback_data='close')
-    ]
-])
-
-email = ''
+import time
+import yt_dlp
+import logging
+import asyncio
+from pyrogram import Client, filters
+from pyrogram.types import Message
 
 
-def register(app):
-    @app.on_message(filters.command('temp'))
-    async def start_msg(client, message):
-        with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
-            premium_users = premium.readlines()
-        if str(message.from_user.id)+'\n' in premium_users:
-            global email
-            email = ''
-            await message.reply(f"**Hey {message.from_user.first_name}!!**\n <b>@checktbgbot is a free service that allows you to generate and receive emails at a temporary address that self-destructs after a certain time elapses.\n\n**__ How It Safeguards You??__**\n- Using temporary mail allows you to completely protect your real mailbox against the loss of personal information. Your temporary e-mail address is completely anonymous. Your details: information about your person and users with whom you communicate, IP-address, e-mail address are protected and completely confidential.\n\nFurther Queries @FxSihad🌚</b>")
-            await message.reply("<b>⎚ `**Generate an Email Now**`</b>", reply_markup=buttons)
+async def download_file(url, message, output_dir="."):
+    ydl_opts = {
+        'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
+        'format': 'best'
+    }
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        status = await message.reply("<b>⎚ `Downloading...`</b>")
+        try:
+            ydl.extract_info(url)
+            await status.delete()
+        except yt_dlp.utils.DownloadError as e:
+            await message.reply(e)
 
+
+async def upload_files(dl_path, message):
+    if not os.path.exists(dl_path):
+        os.makedirs(dl_path)
+    dldirs = [i async for i in absolute_paths(dl_path)]
+
+    for files in dldirs:
+        success = await send_media(files, message)
+        if success:
+            await asyncio.sleep(1)
+            os.remove(files)
         else:
-            await message.reply("<b>Only For Premium Members</b>")
+            await message.reply("<b>Error uploading the file</b>")
+            os.remove(files)
 
-        @app.on_callback_query()
-        async def mailbox(client, message):
-            global email
-            response = message.data
-            if response == 'generate':
-                email = re.get(
-                    "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1").json()[0]
-                await message.edit_message_text(f'<b>**Your Temporary E-mail:** <b>`{email}`', reply_markup=buttons)
-            elif response == 'refresh':
-                try:
-                    if email == '':
-                        await message.edit_message_text('<b>Generate an email</b>', reply_markup=buttons)
-                    else:
-                        get_msg_endpoint = "https://www.1secmail.com/api/v1/?action=getMessages&login=" + \
-                            email[:email.find("@")] + "&domain=" + \
-                            email[email.find("@") + 1:]
-                        ref_response = re.get(get_msg_endpoint).json()
-                        if ref_response:
-                            global idnum
-                            idnum = str(ref_response[0]['id'])
-                            from_msg = ref_response[0]['from']
-                            subject = ref_response[0]['subject']
-                            refresh_reply = f'You have a message from {from_msg}\n\nSubject: {subject}'
-                            await message.edit_message_text(refresh_reply, reply_markup=msg_buttons)
-                        else:
-                            await message.answer(f'<b>No messages were received in your Mailbox {email}</b>')
-                except Exception as e:
-                    print(e)
-                    await message.answer('<b>An error occurred while fetching messages.</b>')
-            elif response == 'view_msg':
-                try:
-                    msg = re.get("https://www.1secmail.com/api/v1/?action=readMessage&login=" +
-                                 email[:email.find("@")] + "&domain=" + email[email.find("@") + 1:] + "&id=" + idnum).json()
-                    from_mail = msg['from']
-                    date = msg['date']
-                    subjectt = msg['subject']
-                    attachments = msg.get('attachments', [])
-                    body = msg['body']
-                    mailbox_view = f'ID No: {idnum}\nFrom: {from_mail}\nDate: {date}\nSubject: {subjectt}\nMessage:\n{body}'
-                    if not attachments:
-                        await message.edit_message_text(mailbox_view, reply_markup=buttons)
-                        await message.answer("<b>No Messages Were Received.</b>", show_alert=True)
-                    else:
-                        dl_attach = attachments[0]['filename']
-                        attc = f"https://www.1secmail.com/api/v1/?action=download&login={email[:email.find('@')]}&domain={email[email.find('@') + 1:]}&id={idnum}&file={dl_attach}"
-                        mailbox_vieww = f'{mailbox_view}\n\n[Download]({attc}) Attachments'
-                        file_dl = wget.download(attc)
-                        await message.edit_message_text(mailbox_vieww, reply_markup=buttons)
-                        os.remove(dl_attach)
-                except Exception as e:
-                    print(e)
-                    await message.answer('<b>An error occurred while viewing the message.</b>')
-            elif response == 'close':
-                await message.edit_message_text('<b>Session Closed✅</b>')
+
+async def absolute_paths(directory):
+    for dirpath, _, filenames in os.walk(directory):
+        for f in filenames:
+            yield os.path.abspath(os.path.join(dirpath, f))
+
+
+async def send_media(file_name, update):
+    try:
+        if os.path.isfile(file_name):
+            caption = file_name if '/' not in file_name else file_name.split(
+                '/')[-1]
+            caption = os.path.basename(file_name)
+            progress_args = await update.reply("<b>⎚ `Uploading...`</b>")
+
+            if file_name.lower().endswith(('.mkv', '.mp4')):
+                await update.reply_video(file_name, caption=caption)
+            elif file_name.lower().endswith(('.jpg', '.jpeg', '.png')):
+                await update.reply_photo(file_name, caption=caption)
+            elif file_name.lower().endswith(('.mp3')):
+                await update.reply_audio(file_name, caption=caption)
+            else:
+                await update.reply_document(file_name, caption=caption)
+
+            await progress_args.delete()
+
+            return True
+        else:
+            logging.error(f"File not found: {file_name}")
+    except Exception as e:
+        logging.error(f"Error sending media: {str(e)}")
+        return False
+
+
+@Client.on_message(filters.command("dllink"))
+async def register_command(client: Client, message: Message):
+    dl_path = "your_download"
+    with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
+        premium_users = premium.readlines()
+    if str(message.from_user.id) + '\n' in premium_users:
+        urls = message.text.split("/dllink", 1)[1].strip()
+        if not urls:
+            await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
+        else:
+            await download_file(urls, message, dl_path)
+            await upload_files(dl_path, message)
