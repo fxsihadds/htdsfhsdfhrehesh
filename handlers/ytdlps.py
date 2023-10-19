@@ -1,9 +1,9 @@
-import os
+import os, time
 import yt_dlp
-import time
 import logging
 import asyncio
 from pyrogram import Client, filters
+from pyrogram.types import Message
 
 
 async def download_file(url, message, output_dir="."):
@@ -70,7 +70,7 @@ async def send_media(file_name, update):
 
 def register(app):
     @app.on_message(filters.command("link"))
-    async def register_command(client, message):
+    async def register_command(client:Client, message:Message):
         dl_path = "your_download"
         with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
             premium_users = premium.readlines()
