@@ -69,13 +69,13 @@ async def send_media(file_name, update):
         return False
 
 
-@Client.on_message(filters.command("links"))
+@Client.on_message(filters.command("dl"))
 async def register_command(client: Client, message: Message):
     dl_path = "your_download"
     with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
         premium_users = premium.readlines()
     if str(message.from_user.id) + '\n' in premium_users:
-        urls = message.text.split("/links", 1)[1].strip()
+        urls = message.text.split("/dl", 1)[1].strip()
         if not urls:
             await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
         else:
