@@ -1,10 +1,24 @@
-import os
-import time
+import os, time
 import yt_dlp
 import logging
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
+
+
+def register(app):
+    @app.on_message(filters.command("dlink"))
+    async def register_command(client:Client, message:Message):
+        dl_path = "your_download"
+        with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
+            premium_users = premium.readlines()
+        if str(message.from_user.id) + '\n' in premium_users:
+            urls = message.text.split("/dlink", 1)[1].strip()
+            if not urls:
+                await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
+            else:
+                await download_file(urls, message, dl_path)
+                await upload_files(dl_path, message)
 
 
 async def download_file(url, message, output_dir="."):
@@ -67,17 +81,3 @@ async def send_media(file_name, update):
     except Exception as e:
         logging.error(f"Error sending media: {str(e)}")
         return False
-
-
-@Client.on_message(filters.command("dllink"))
-async def register_command(client: Client, message: Message):
-    dl_path = "your_download"
-    with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
-        premium_users = premium.readlines()
-    if str(message.from_user.id) + '\n' in premium_users:
-        urls = message.text.split("/dllink", 1)[1].strip()
-        if not urls:
-            await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
-        else:
-            await download_file(urls, message, dl_path)
-            await upload_files(dl_path, message)
