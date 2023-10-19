@@ -6,6 +6,21 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 
 
+def register(app):
+    @app.on_message(filters.command("link"))
+    async def register_command(client:Client, message:Message):
+        dl_path = "your_download"
+        with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
+            premium_users = premium.readlines()
+        if str(message.from_user.id) + '\n' in premium_users:
+            urls = message.text.split("/link", 1)[1].strip()
+            if not urls:
+                await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
+            else:
+                await download_file(urls, message, dl_path)
+                await upload_files(dl_path, message)
+
+
 async def download_file(url, message, output_dir="."):
     ydl_opts = {
         'outtmpl': os.path.join(output_dir, '%(title)s.%(ext)s'),
@@ -66,18 +81,3 @@ async def send_media(file_name, update):
     except Exception as e:
         logging.error(f"Error sending media: {str(e)}")
         return False
-
-
-def register(app):
-    @app.on_message(filters.command("link"))
-    async def register_command(client:Client, message:Message):
-        dl_path = "your_download"
-        with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
-            premium_users = premium.readlines()
-        if str(message.from_user.id) + '\n' in premium_users:
-            urls = message.text.split("/link", 1)[1].strip()
-            if not urls:
-                await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
-            else:
-                await download_file(urls, message, dl_path)
-                await upload_files(dl_path, message)
