@@ -81,3 +81,5 @@ async def register_command(client: Client, message: Message):
         else:
             await download_file(urls, message, dl_path)
             await upload_files(dl_path, message)
+    else:
+        await message.reply_text("<b>Only For Premium Members</b>")
