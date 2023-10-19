@@ -21,7 +21,6 @@ plugins = dict(
 
 
 handlers_dir = 'handlers'
-checkers_dir = 'checkers'
 users_dir = 'users'
 
 
@@ -33,15 +32,6 @@ app = Client(
     plugins=plugins,
     workers=10
 )
-
-
-for filename in os.listdir(checkers_dir):
-    if filename.endswith('.py'):
-        module_name = filename[:-3]
-        module = __import__(f'{checkers_dir}.{module_name}',
-                            fromlist=[module_name])
-        module.register(app)
-
 
 for filename in os.listdir(handlers_dir):
     if filename.endswith('.py'):
