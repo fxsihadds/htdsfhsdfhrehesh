@@ -19,6 +19,8 @@ def register(app):
             else:
                 await download_file(urls, message, dl_path)
                 await upload_files(dl_path, message)
+        else:
+            await message.reply_text("<b>Only For Premium Members</b>")
 
 
 async def download_file(url, message, output_dir="."):
