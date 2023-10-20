@@ -1,5 +1,5 @@
+from typing import Tuple
 import os
-import time
 import yt_dlp
 import logging
 import asyncio
@@ -49,7 +49,6 @@ async def send_media(file_name, update):
                 '/')[-1]
             caption = os.path.basename(file_name)
             progress_args = await update.reply("<b>⎚ `Uploading...`</b>")
-
             if file_name.lower().endswith(('.mkv', '.mp4')):
                 await update.reply_video(file_name, caption=caption)
             elif file_name.lower().endswith(('.jpg', '.jpeg', '.png')):
@@ -69,17 +68,18 @@ async def send_media(file_name, update):
         return False
 
 
-@Client.on_message(filters.command("dl"))
+@Client.on_message(filters.command("links"))
 async def register_command(client: Client, message: Message):
     dl_path = "your_download"
     with open(file="users/premium.txt", mode="r+", encoding="utf-8") as premium:
         premium_users = premium.readlines()
     if str(message.from_user.id) + '\n' in premium_users:
-        urls = message.text.split("/dl", 1)[1].strip()
+        urls = message.text.split("/links", 1)[1].strip()
         if not urls:
             await message.reply("<b>⎚ Use <code>/link</code> Url To Download Your File</b>")
         else:
             await download_file(urls, message, dl_path)
             await upload_files(dl_path, message)
+
     else:
-        await message.reply_text("<b>Only For Premium Members</b>")
+        await message.reply(f'<b>Only For Premium Members</b>')
