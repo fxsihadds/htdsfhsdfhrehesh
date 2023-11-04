@@ -1,10 +1,10 @@
-from typing import Tuple
 import os
 import yt_dlp
 import logging
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
+from plugins.hachoir import get_video_duration, thumbnail_video
 
 
 async def download_file(url, message, output_dir="."):
@@ -49,11 +49,14 @@ async def send_media(file_name, update):
                 '/')[-1]
             caption = os.path.basename(file_name)
             progress_args = await update.reply("<b>⎚ `Uploading...`</b>")
+            durations = get_video_duration(file_name)
+            thumbnail_video(file_name)
             if file_name.lower().endswith(('.mkv', '.mp4')):
-                await update.reply_video(file_name, caption=caption)
+                await update.reply_video(file_name, caption=caption, thumb="thumbnail.png", duration=durations)
+                os.remove("thumbnail.png")
             elif file_name.lower().endswith(('.jpg', '.jpeg', '.png')):
                 await update.reply_photo(file_name, caption=caption)
-            elif file_name.lower().endswith(('.mp3')):
+            elif file_name.lower().endswith('.mp3'):
                 await update.reply_audio(file_name, caption=caption)
             else:
                 await update.reply_document(file_name, caption=caption)
