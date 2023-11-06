@@ -4,7 +4,7 @@ import logging
 import asyncio
 from pyrogram import Client, filters
 from pyrogram.types import Message
-from plugins.hachoir import get_video_duration, thumbnail_video
+from plugins.hachoir import get_video_duration, thumbnail_video, get_file_size
 
 
 async def download_file(url, message, output_dir="."):
@@ -15,7 +15,8 @@ async def download_file(url, message, output_dir="."):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         status = await message.reply("<b>⎚ `Downloading...`</b>")
         try:
-            ydl.extract_info(url)
+            details = ydl.extract_info(url)
+            print(details)
             await status.delete()
         except yt_dlp.utils.DownloadError as e:
             await message.reply(e)
@@ -32,7 +33,7 @@ async def upload_files(dl_path, message):
             await asyncio.sleep(1)
             os.remove(files)
         else:
-            await message.reply("<b>Error uploading the file</b>")
+            await message.reply("<b>Error Uploading The File</b>")
             os.remove(files)
 
 
@@ -49,21 +50,25 @@ async def send_media(file_name, update):
                 '/')[-1]
             caption = os.path.basename(file_name)
             progress_args = await update.reply("<b>⎚ `Uploading...`</b>")
-            durations = get_video_duration(file_name)
-            thumbnail_video(file_name)
-            if file_name.lower().endswith(('.mkv', '.mp4')):
-                await update.reply_video(file_name, caption=caption, thumb="thumbnail.png", duration=durations)
-                os.remove("thumbnail.png")
-            elif file_name.lower().endswith(('.jpg', '.jpeg', '.png')):
-                await update.reply_photo(file_name, caption=caption)
-            elif file_name.lower().endswith('.mp3'):
-                await update.reply_audio(file_name, caption=caption)
+            size = get_file_size(file_name)
+            if size:
+                durations = get_video_duration(file_name)
+                thumbnail_video(file_name)
+                if file_name.lower().endswith(('.mkv', '.mp4')):
+                    await update.reply_video(file_name, caption=caption, thumb="thumbnail.png", duration=durations)
+                    os.remove("thumbnail.png")
+                elif file_name.lower().endswith(('.jpg', '.jpeg', '.png')):
+                    await update.reply_photo(file_name, caption=caption)
+                elif file_name.lower().endswith('.mp3'):
+                    await update.reply_audio(file_name, caption=caption)
+                else:
+                    await update.reply_document(file_name, caption=caption)
+
+                await progress_args.delete()
+
+                return True
             else:
-                await update.reply_document(file_name, caption=caption)
-
-            await progress_args.delete()
-
-            return True
+                await progress_args.edit("<b>Your File is To Big!</b>")
         else:
             logging.error(f"File not found: {file_name}")
     except Exception as e:
