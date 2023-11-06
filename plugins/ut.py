@@ -15,8 +15,7 @@ async def download_file(url, message, output_dir="."):
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         status = await message.reply("<b>⎚ `Downloading...`</b>")
         try:
-            details = ydl.extract_info(url)
-            print(details)
+            ydl.extract_info(url)
             await status.delete()
         except yt_dlp.utils.DownloadError as e:
             await message.reply(e)
