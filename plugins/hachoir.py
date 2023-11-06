@@ -26,3 +26,13 @@ def thumbnail_video(video_file_path):
         print(f"Error: {e}")
 
     return
+
+def get_file_size(video_file_path) -> bool:
+    get_size = os.path.getsize(video_file_path)
+    file_size_megabytes = round(get_size / (1024 * 1024))
+    print(f"File size: {file_size_megabytes} MB")
+    if file_size_megabytes < 1950:
+        return True
+    else:
+        os.remove(video_file_path)
+        return False
