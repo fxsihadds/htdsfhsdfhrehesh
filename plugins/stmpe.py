@@ -34,7 +34,7 @@ def get_upload_url(api_login, api_key, sha256, httponly=False):
         "login": api_login,
         "key": api_key,
         "sha256": sha256,
-        "httponly": httponly,
+        "httponly": False,
     }
 
     response = requests.get(base_url, params=params)
