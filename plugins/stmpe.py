@@ -1,12 +1,13 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 import os
+import time
 import requests
 
 
 @Client.on_message(filters.command(['streampate', 'smp']) & filters.private)
 async def streampate(bot: Client, cmd: Message):
-    global status
+    global status, file_path
     status = await cmd.reply_text("<b>⎚ `Downloading...`</b>")
     if cmd.reply_to_message:
         if cmd.reply_to_message.document or cmd.reply_to_message.video or cmd.reply_to_message.audio:
@@ -46,6 +47,7 @@ def get_upload_url(api_login, api_key, sha256, httponly=False):
 
 
 async def uploadfunc(bot, cmd, files):
+    path_rmv = files
     api_login = "894087923f51d8018514"
     api_key = "wdeq0wlyyaHJqeZ"
     sha256 = "ca247fe30e68d516a54e7a57247724617c345daa88168f6264f756d7125ee9eb"
@@ -58,8 +60,9 @@ async def uploadfunc(bot, cmd, files):
         upload_url = upload_url_response
         if upload_url:
             try:
-                files = {'file': open(files, 'rb')}
-                response = requests.post(upload_url, files=files)
+                with open(files, 'rb') as file:
+                    files = {'file': file}
+                    response = requests.post(upload_url, files=files)
                 if response.status_code == 200:
                     response_dict = response.json()
                     msg = response_dict.get("msg", {})
@@ -74,11 +77,10 @@ async def uploadfunc(bot, cmd, files):
                     """
                     await status.edit_text(message_text)
                 else:
-                    await cmd.reply_text(f"Failed to upload file. Status code: {response.status_code}")
+                    await status.edit_text(f"Failed to upload file. Status code: {response.status_code}")
             except Exception as e:
-                os.remove(files)
-                await cmd.reply_text(f"Error during file upload: {e}")
+                await status.edit_text(f"Error during file upload: {e}")
         else:
-            await cmd.reply_text("Upload URL not found in the response.")
+            await status.edit_text("Upload URL not found in the response.")
     else:
-        await cmd.reply_text("Failed to get upload URL.")
+        await status.edit_text("Failed to get upload URL.")
