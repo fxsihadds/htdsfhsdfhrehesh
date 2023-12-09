@@ -11,7 +11,6 @@ async def take_screenshot(bot: Client, cmd: Message):
         _, web = cmd.text.split(" ", 1)
     except ValueError as e:
         await status.edit_text('</b>Please Using Like /ss Then Any Url.</b>')
-        print(web)
     await take_screenshot_and_reply(bot, cmd, cmd.chat.id, web)
     await status.delete()
 
