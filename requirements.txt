@@ -8,7 +8,6 @@ cryptography==40.0.2
 httpcore==0.16.3
 httplib2==0.21.0
 httpx==0.23.3
-urllib3==1.26.18
 cffi==1.16.0
 lxml==4.9.4
 curl-cffi==0.5.10
@@ -30,3 +29,4 @@ urllib3==1.26.14
 websockets==10.4
 google-api-python-client==2.26.1
 wget
+urllib3
